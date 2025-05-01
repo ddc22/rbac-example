@@ -4,6 +4,7 @@ import { AppService } from "./app.service";
 import { PatientRecordModule } from "./patient-record/patient-record.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { PatientRecords } from "./entities/PatientRecords";
 
 @Module({
   imports: [
@@ -22,8 +23,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
           username: configService.get("DATABASE_USER", "turbovets"),
           password: configService.get("DATABASE_PASSWORD", "turbovets"),
           database: configService.get("DATABASE_DB", "turbovets"),
-          entities: [__dirname + "/../**/*.entity{.ts,.js}"],
-          synchronize: configService.get("NODE_ENV") !== "production",
+          entities: [__dirname + "/**/*.{ts,js}"],
         };
       },
     }),
