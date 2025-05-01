@@ -1,13 +1,14 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { PatientRecordModule } from "./patient-record/patient-record.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PatientRecords } from "./entities/PatientRecords";
+import { PermissionGuardService } from "./cross-cutting-aspects/auth/permission.guard";
+import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
 
 @Module({
   imports: [
+    GlobalModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
@@ -30,6 +31,6 @@ import { PatientRecords } from "./entities/PatientRecords";
     PatientRecordModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [PermissionGuardService],
 })
 export class AppModule {}
