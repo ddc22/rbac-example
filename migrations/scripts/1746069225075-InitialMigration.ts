@@ -31,10 +31,10 @@ export class InitialMigration1746069225075 implements MigrationInterface {
 
         CREATE TABLE "patientRecords" (
             "id" UUID PRIMARY KEY,
-            "owner" UUID NOT NULL,
+            "ownerId" UUID NOT NULL,
             "record" JSONB NOT NULL,
             "organizationId" UUID NOT NULL,
-            CONSTRAINT "patientrecords_owner_foreign" FOREIGN KEY("owner") REFERENCES "user"("id"),
+            CONSTRAINT "patientrecords_owner_foreign" FOREIGN KEY("ownerId") REFERENCES "user"("id"),
             CONSTRAINT "patientrecords_organizationid_foreign" FOREIGN KEY("organizationId") REFERENCES "organization"("id")
         );
 
@@ -50,7 +50,7 @@ export class InitialMigration1746069225075 implements MigrationInterface {
         -- Create indexes for foreign keys to improve query performance
         CREATE INDEX "idx_user_roleid" ON "user"("roleId");
         CREATE INDEX "idx_user_organizationid" ON "user"("organizationId");
-        CREATE INDEX "idx_patientrecords_owner" ON "patientRecords"("owner");
+        CREATE INDEX "idx_patientrecords_owner" ON "patientRecords"("ownerId");
         CREATE INDEX "idx_patientrecords_organizationid" ON "patientRecords"("organizationId");
         CREATE INDEX "idx_rolepermission_roleid" ON "rolePermission"("roleId");
         CREATE INDEX "idx_rolepermission_permissionid" ON "rolePermission"("permissionId");

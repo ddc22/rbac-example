@@ -112,7 +112,7 @@ export async function seed() {
 
       // 6. Create patient records
       await transactionalEntityManager.query(`
-        INSERT INTO "patientRecords" ("id", "owner", "record", "organizationId") VALUES 
+        INSERT INTO "patientRecords" ("id", "ownerId", "record", "organizationId") VALUES 
         ('${uuidv4()}', '${ownerUserId}', '{"patientName": "John Doe", "age": 45, "diagnosis": "Hypertension", "treatment": "Medication and lifestyle changes"}', '${level1OrgId}'),
         ('${uuidv4()}', '${adminUserId}', '{"patientName": "Jane Smith", "age": 32, "diagnosis": "Type 2 Diabetes", "treatment": "Insulin therapy"}', '${level1OrgId}'),
         ('${uuidv4()}', '${viewerUserId}', '{"patientName": "Robert Johnson", "age": 28, "diagnosis": "Influenza", "treatment": "Rest and fluids"}', '${level2OrgId}')

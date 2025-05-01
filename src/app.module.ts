@@ -5,8 +5,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PermissionGuardService } from "./cross-cutting-aspects/auth/permission.guard";
 import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.interceptor";
+import { PatientRecordService } from "./patient-record/services/patient-record/patient-record.service";
 
 @Module({
   imports: [
@@ -35,10 +36,13 @@ import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.in
   ],
   controllers: [AppController],
   providers: [
-    PermissionGuardService,
     {
       provide: APP_INTERCEPTOR,
       useClass: FakeLoginInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuardService,
     },
   ],
 })

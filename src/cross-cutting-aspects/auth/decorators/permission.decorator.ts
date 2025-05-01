@@ -1,12 +1,9 @@
 import { SetMetadata } from "@nestjs/common";
+export const REQUIRED_PERMISSIONS_KEY = "required_permissions";
+export const ALLOWED_PERMISSIONS_KEY = "allowed_permissions";
 
-export const PERMISSION_KEY = "permission_key";
+export const RequirePermissions = (...permissions: string[]) =>
+  SetMetadata(REQUIRED_PERMISSIONS_KEY, permissions);
 
-/**
- * Decorator to set permission metadata on a class or method.
- * @param permissions - The permissions to set.
- * @returns A decorator function.
- */
-export const AllowedPermissions = (...permissions: string[]) => {
-  return SetMetadata(PERMISSION_KEY, permissions);
-};
+export const AllowPermissions = (...permissions: string[]) =>
+  SetMetadata(ALLOWED_PERMISSIONS_KEY, permissions);

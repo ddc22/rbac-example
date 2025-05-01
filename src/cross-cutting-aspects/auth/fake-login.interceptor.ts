@@ -6,9 +6,9 @@ import {
   ExecutionContext,
   CallHandler,
 } from "@nestjs/common";
-import { ownerUserId } from "helper/seed";
 import { Observable } from "rxjs";
 import { UserService } from "src/services/user/user.service";
+import { CURRENT_USER_KEY } from "./current-user";
 
 @Injectable()
 export class FakeLoginInterceptor implements NestInterceptor {
@@ -22,7 +22,7 @@ export class FakeLoginInterceptor implements NestInterceptor {
     /**
      * TODO: Wire up this hardcoded user from a jwt and an auth guard
      */
-    const user = await this.userService.getUser(ownerUserId);
+    const user = await this.userService.getUser(CURRENT_USER_KEY);
     request.user = user;
 
     return next.handle();
