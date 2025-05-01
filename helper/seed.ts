@@ -8,9 +8,16 @@ import { v4 as uuidv4 } from "uuid";
 import dataSource from "../migrations/datasource";
 
 /**
+ * Hardcoded so that its easier to test
+ */
+const ownerUserId = "ba7c6438-dfca-48ee-9776-93777a59a0e0";
+const adminUserId = "989159f8-0190-42a8-b7fa-c67bc9510f61";
+const viewerUserId = "cb662a05-0b86-4551-959a-b4d8cb407406";
+
+/**
  * Main seed function
  */
-async function seed() {
+export async function seed() {
   // Initialize connection
   try {
     await dataSource.initialize();
@@ -37,10 +44,6 @@ async function seed() {
   // Organizations
   const level1OrgId = uuidv4();
   const level2OrgId = uuidv4();
-
-  const ownerUserId = uuidv4();
-  const adminUserId = uuidv4();
-  const viewerUserId = uuidv4();
 
   try {
     // Start a transaction
@@ -128,7 +131,9 @@ async function seed() {
 }
 
 // Run the seed function
-seed().catch((error) => {
-  console.error("Unhandled error during seeding:", error);
-  process.exit(1);
-});
+// seed().catch((error) => {
+//   console.error("Unhandled error during seeding:", error);
+//   process.exit(1);
+// });
+
+export { ownerUserId, adminUserId, viewerUserId };

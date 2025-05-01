@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PermissionGuardService } from "./cross-cutting-aspects/auth/permission.guard";
 import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.interceptor";
 
 @Module({
   imports: [
@@ -28,9 +30,16 @@ import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
         };
       },
     }),
+
     PatientRecordModule,
   ],
   controllers: [AppController],
-  providers: [PermissionGuardService],
+  providers: [
+    PermissionGuardService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: FakeLoginInterceptor,
+    },
+  ],
 })
 export class AppModule {}
