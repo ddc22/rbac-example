@@ -24,14 +24,14 @@ import { UserData } from "src/services/user/user-data";
 export class PatientRecordController {
   constructor(private patientRecordService: PatientRecordService) {}
   @Get()
-  @AllowPermissions("read_own_patient_record", "read_any_record")
+  @AllowPermissions("read::own::patient_record", "read::any::record")
   async getPatientRecords(@CurrentUser() user: UserData) {
     const patientRecords =
       await this.patientRecordService.getPatientRecords(user);
     return patientRecords;
   }
   @Get(":id")
-  @AllowPermissions("read_own_patient_record", "read_any_patient_record")
+  @AllowPermissions("read::own::patient_record", "read::any::patient_record")
   async getPatientRecord(
     @Param("id") id: string,
     @CurrentUser() user: UserData,
@@ -63,7 +63,10 @@ export class PatientRecordController {
   }
 
   @Put(":id")
-  @AllowPermissions("update_own_patient_record", "update_any_patient_record")
+  @AllowPermissions(
+    "update::own::patient_record",
+    "update::any::patient_record",
+  )
   async updatePatientRecord(
     @Param("id") id: string,
     @Body() updatePatientRecordDto: PatientRecordDto,
@@ -79,7 +82,10 @@ export class PatientRecordController {
   }
 
   @Delete(":id")
-  @AllowPermissions("delete_own_patient_record", "delete_any_patient_record")
+  @AllowPermissions(
+    "delete::own::patient_record",
+    "delete::any::patient_record",
+  )
   async deletePatientRecord(
     @Param("id") id: string,
     @CurrentUser() user: UserData,

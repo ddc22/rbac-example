@@ -61,12 +61,12 @@ export async function seed() {
       await transactionalEntityManager.query(`
         INSERT INTO "permission" ("id", "name") VALUES 
         ('${createRecordId}', 'create_patient_patient_record'),
-        ('${readOwnRecordId}', 'read_own_patient_record'),
-        ('${readAnyRecordId}', 'read_any_patient_record'),
-        ('${updateOwnRecordId}', 'update_own_patient_record'),
-        ('${updateAnyRecordId}', 'update_any_patient_record'),
-        ('${deleteOwnRecordId}', 'delete_own_patient_record'),
-        ('${deleteAnyRecordId}', 'delete_any_patient_record')
+        ('${readOwnRecordId}', 'read::own::patient_record'),
+        ('${readAnyRecordId}', 'read::any::patient_record'),
+        ('${updateOwnRecordId}', 'update::own::patient_record'),
+        ('${updateAnyRecordId}', 'update::any::patient_record'),
+        ('${deleteOwnRecordId}', 'delete::own::patient_record'),
+        ('${deleteAnyRecordId}', 'delete::any::patient_record')
       `);
       console.log("Permissions created");
 
