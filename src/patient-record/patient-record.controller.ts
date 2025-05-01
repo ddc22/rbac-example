@@ -31,7 +31,7 @@ export class PatientRecordController {
     return patientRecords;
   }
   @Get(":id")
-  @AllowPermissions("read_own_record", "read_any_record")
+  @AllowPermissions("read_own_patient_record", "read_any_patient_record")
   async getPatientRecord(
     @Param("id") id: string,
     @CurrentUser() user: UserData,
@@ -49,7 +49,7 @@ export class PatientRecordController {
   }
 
   @Post()
-  @RequirePermissions("create_record")
+  @RequirePermissions("create_patient_record")
   createPatientRecord(
     @Body() createPatientRecordDto: PatientRecordDto,
     @CurrentUser() user: UserData,
@@ -63,7 +63,7 @@ export class PatientRecordController {
   }
 
   @Put(":id")
-  @AllowPermissions("update_own_record", "update_any_record")
+  @AllowPermissions("update_own_patient_record", "update_any_patient_record")
   async updatePatientRecord(
     @Param("id") id: string,
     @Body() updatePatientRecordDto: PatientRecordDto,
@@ -79,7 +79,7 @@ export class PatientRecordController {
   }
 
   @Delete(":id")
-  @AllowPermissions("delete_own_record", "delete_any_record")
+  @AllowPermissions("delete_own_patient_record", "delete_any_patient_record")
   async deletePatientRecord(
     @Param("id") id: string,
     @CurrentUser() user: UserData,
