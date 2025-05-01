@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinTable, ManyToMany } from "typeorm";
+import { Column, Entity, Index, ManyToMany } from "typeorm";
 import { Role } from "./Role";
 
 @Index("permission_pkey", ["id"], { unique: true })

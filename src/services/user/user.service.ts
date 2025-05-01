@@ -1,14 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Permission } from "src/entities/Permission";
 import { Role } from "src/entities/Role";
 import { User } from "src/entities/User";
 import { Repository } from "typeorm";
+import { UserData } from "./user-data";
 
-export type UserData = {
-  info: User;
-  permissions: Permission[];
-};
 @Injectable()
 export class UserService {
   constructor(
@@ -19,7 +15,10 @@ export class UserService {
   ) {}
 
   async getUser(userId: string): Promise<UserData | null> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ["organization"],
+    });
 
     if (!user) {
       return null;
@@ -30,11 +29,7 @@ export class UserService {
       relations: ["permissions"],
     });
 
-    const result = {
-      info: user,
-      permissions: role?.permissions ?? [],
-    };
-
+    const result = new UserData(user, role?.permissions ?? []);
     return result;
   }
 }

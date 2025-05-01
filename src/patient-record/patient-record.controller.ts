@@ -10,7 +10,6 @@ import {
   Put,
 } from "@nestjs/common";
 import { CurrentUser } from "src/cross-cutting-aspects/auth/decorators/current-user.decorator";
-import { UserData } from "src/services/user/user.service";
 import {
   PatientRecordDto,
   PatientRecordService,
@@ -19,12 +18,13 @@ import {
   AllowPermissions,
   RequirePermissions,
 } from "src/cross-cutting-aspects/auth/decorators/permission.decorator";
+import { UserData } from "src/services/user/user-data";
 
 @Controller("patient-record")
 export class PatientRecordController {
   constructor(private patientRecordService: PatientRecordService) {}
   @Get()
-  @AllowPermissions("read_own_record", "read_any_record")
+  @AllowPermissions("read_own_patient_record", "read_any_record")
   async getPatientRecords(@CurrentUser() user: UserData) {
     const patientRecords =
       await this.patientRecordService.getPatientRecords(user);
@@ -50,15 +50,14 @@ export class PatientRecordController {
 
   @Post()
   @RequirePermissions("create_record")
-  async createPatientRecord(
+  createPatientRecord(
     @Body() createPatientRecordDto: PatientRecordDto,
     @CurrentUser() user: UserData,
   ) {
-    const newPatientRecord =
-      await this.patientRecordService.createPatientRecord(
-        createPatientRecordDto,
-        user,
-      );
+    const newPatientRecord = this.patientRecordService.createPatientRecord(
+      createPatientRecordDto,
+      user,
+    );
 
     return newPatientRecord;
   }

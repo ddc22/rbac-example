@@ -2,8 +2,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PatientRecords } from "src/entities/PatientRecords";
-import { Repository } from "typeorm";
-import { UserData } from "../../../services/user/user.service";
+import { MoreThan, MoreThanOrEqual, Repository } from "typeorm";
+import {
+  ACTIONS,
+  RESOURCES,
+  SCOPE,
+} from "src/cross-cutting-aspects/auth/authorization-service/permission-structure";
+import { UserData } from "src/services/user/user-data";
 export class PatientRecordDto {
   recordId: string;
   record: object;
@@ -23,9 +28,32 @@ export class PatientRecordService {
   }
 
   async getPatientRecordById(id: string, user: UserData) {
-    const patientRecords = await this.patientRecordRepository.findOne({
-      where: { id: id },
+    const recordReadPermissions = user.filterPermissions(
+      RESOURCES.PATIENT_RECORD,
+      ACTIONS.READ,
+    );
+    const whereCondition: Record<string, any> = {};
+    whereCondition.organization = {
+      level: MoreThanOrEqual(user.info.organization.level),
+    };
+    if (
+      !recordReadPermissions.find((p) => p.includes(SCOPE.ANY)) &&
+      recordReadPermissions.find((p) => p.includes(SCOPE.OWN))
+    ) {
+      whereCondition.ownerId = user.info.id;
+    }
+
+    console.log({
+      whereCondition,
+      recordReadPermissions,
+      all: user.permissions,
     });
+
+    const patientRecords = await this.patientRecordRepository.findOne({
+      where: { id: id, organizationId: user.info.organizationId },
+      relations: ["organization"],
+    });
+
     return patientRecords;
   }
 

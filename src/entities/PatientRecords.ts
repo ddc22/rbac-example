@@ -25,5 +25,5 @@ export class PatientRecords {
 
   @ManyToOne(() => User, (user) => user.patientRecords)
   @JoinColumn([{ name: "ownerId", referencedColumnName: "id" }])
-  owner2: User;
+  owner: User;
 }

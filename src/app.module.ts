@@ -7,7 +7,6 @@ import { PermissionGuardService } from "./cross-cutting-aspects/auth/permission.
 import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.interceptor";
-import { PatientRecordService } from "./patient-record/services/patient-record/patient-record.service";
 
 @Module({
   imports: [

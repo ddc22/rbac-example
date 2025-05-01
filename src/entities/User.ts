@@ -27,7 +27,7 @@ export class User {
   @Column("uuid", { name: "organizationId" })
   organizationId: string;
 
-  @OneToMany(() => PatientRecords, (patientRecords) => patientRecords.owner2)
+  @OneToMany(() => PatientRecords, (patientRecords) => patientRecords.owner)
   patientRecords: PatientRecords[];
 
   @ManyToOne(() => Organization, (organization) => organization.users)
