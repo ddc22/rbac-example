@@ -63,6 +63,7 @@ export class PermissionGuardService implements CanActivate {
       method: request.method,
       resource: context.getClass().name,
       accessGranted: result,
+      resourceId: request.params.id,
       extra: {
         ip: context.switchToHttp().getRequest().ip,
         userAgent: context.switchToHttp().getRequest().headers["user-agent"],

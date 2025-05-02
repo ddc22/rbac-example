@@ -9,8 +9,8 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npm run nest:start",
-    "setup:db":"npm run db:up && npm run migration:run && npm run seed",
-    "destroy:db":"docker-compose down -v",
+    "setup:db": "npm run db:up && npm run migration:run && npm run seed",
+    "destroy:db": "docker-compose down -v",
     "start:with:db": "npm run db && npm run nest:start",
     "db:up": "docker-compose -f docker-compose.yml up -d",
     "db:down": "docker-compose down",
@@ -29,7 +29,7 @@
     "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create ./migrations/$npm_config_name",
     "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d ./migrations/datasource.ts ./migrations/$npm_config_name",
     "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./migrations/datasource.ts",
-    "generate:entities":"npx typeorm-model-generator -h localhost -d turbovets -p 5432 -u turbovets -x turbovets -e postgres -o ./src/entities --noConfig --skipSchema --strictMode"
+    "generate:entities": "npx typeorm-model-generator -h localhost -d turbovets -p 5432 -u turbovets -x turbovets -e postgres -o ./src/entities --noConfig --skipSchema --strictMode"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -41,7 +41,8 @@
     "pg": "^8.15.6",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.22"
+    "typeorm": "^0.3.22",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

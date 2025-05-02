@@ -53,7 +53,7 @@ export class InitialMigration1746069225075 implements MigrationInterface {
             "userId" UUID NOT NULL,
             "action" VARCHAR(50) NOT NULL,
             "resource" VARCHAR(255) NOT NULL,
-            "resourceId" UUID,
+            "resourceId" VARCHAR(255),
             "status" VARCHAR(50) NOT NULL,
             "timestamp" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "metadata" JSONB,

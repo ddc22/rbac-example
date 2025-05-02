@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AuditLog } from "src/entities/AuditLog";
 import { Repository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
 
 export type RequestAuditLog = {
   userId: string;
   method: string;
   resource: string;
+  resourceId: string;
   accessGranted: boolean;
   extra: {
     ip: string;
@@ -38,9 +39,11 @@ export class AuditLogService {
 
   logRequest(payload: RequestAuditLog) {
     const auditLog = new AuditLog();
+    auditLog.id = uuidv4();
     auditLog.userId = payload.userId;
     auditLog.action = methodToAction[payload.method] ?? "UNKNOWN";
     auditLog.resource = payload.resource;
+    auditLog.resource = payload.resourceId;
     auditLog.status = payload.accessGranted ? "SUCCESS" : "FAILURE";
     auditLog.timestamp = new Date();
     auditLog.metadata = {
