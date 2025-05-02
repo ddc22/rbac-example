@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PatientRecords } from "src/entities/PatientRecords";
 import { MoreThan, MoreThanOrEqual, Or, Repository } from "typeorm";
@@ -67,11 +67,11 @@ export class PatientRecordService {
     });
 
     if (!organization) {
-      throw new Error("Organization not found");
+      throw new BadRequestException("Organization not found");
     }
 
     if (userOrgLevel > organization?.level) {
-      throw new Error(
+      throw new BadRequestException(
         "User does not have permission to create a record in this organization",
       );
     }
@@ -97,7 +97,7 @@ export class PatientRecordService {
     });
 
     if (!recordToUpdate) {
-      throw new Error(
+      throw new BadRequestException(
         "Patient record not found or you don't have permission to update it",
       );
     }
@@ -107,7 +107,7 @@ export class PatientRecordService {
     });
 
     if (!patientRecordResult) {
-      throw new Error("Patient record not found");
+      throw new BadRequestException("Patient record not found");
     }
     return patientRecordResult;
   }
@@ -123,7 +123,7 @@ export class PatientRecordService {
     });
 
     if (!recordToDelete) {
-      throw new Error(
+      throw new BadRequestException(
         "Patient record not found or you don't have permission to update it",
       );
     }

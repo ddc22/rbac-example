@@ -3,6 +3,7 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { UserService } from "src/services/user/user.service";
@@ -26,7 +27,7 @@ export class FakeLoginInterceptor implements NestInterceptor {
     );
 
     if (!user) {
-      throw new Error("User not found hardcode a valid user");
+      throw new UnauthorizedException("User not found hardcode a valid user");
     }
 
     request.user = user;

@@ -37,8 +37,9 @@ NestJS-based RBAC example for a patient records system.
     - [The other scoping approach](#the-other-scoping-approach)
 - [Future Considerations for Data Access](#future-considerations-for-data-access)
   - [How to extended to handle more complex scenarios](#how-to-extended-to-handle-more-complex-scenarios)
-  - [Security considerations for a production environment](#security-considerations-for-a-production-environment)
+  - [Security and other considerations for a production environment](#security-and-other-considerations-for-a-production-environment)
   - [Performance optimizations for permission checking at scale](#performance-optimizations-for-permission-checking-at-scale)
+  - [Other](#other)
 
 # Setup instructions
 
@@ -368,14 +369,17 @@ Other than orgs, the other scoping level happens from the string. Here we curren
 - Add delegation by adding a table to maintain delegation sessions and extend the auth guard to check for delegations as well when evaluating endpoint permissions and inject the resolved delegated permissions as well. So that its decoupled from other changes.
 - Add field level access granularity to the permission schema and permission string
 
-## Security considerations for a production environment
+## Security and other considerations for a production environment
 - Implement proper authentication using OAuth SSO or JWT Timed Token Based authentication
 - Add sophisticated Logging to all endpoint interactions and feed it to Logstash for processing and setup alarms where appropriate
 - Limit Origins if possible with CORS control
 - Move all DB and other passwords and critical information to a secret store
+- Currently error handling is Rudimentary maintaining proper exception classes and trackable error codes with a custom exception filter will be helpful
 
 ## Performance optimizations for permission checking at scale
 - Cache frequently used service outputs like getUser
 - Ideally expose a role service and cache roles together with their privileges
 - Move to a rich schema instead of string processing to evaluate if a permission has the necessary qualifiers
 - Add db indexes where appropriate specially for organization and owner fields in any resources like records
+
+## Other 
