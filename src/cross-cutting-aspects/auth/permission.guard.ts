@@ -104,13 +104,6 @@ export class PermissionGuardService implements CanActivate {
       user,
     );
 
-    console.log({
-      result,
-      requiredPermissions,
-      allowedPermissions,
-      userPermissionNames,
-      user,
-    });
     await this.auditLogService.logRequest(requestAuditLog);
 
     return result;
