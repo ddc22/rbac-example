@@ -62,7 +62,9 @@ NestJS-based RBAC example for a patient records system.
    ```bash
    npm start
    ```
-   This will start the NestJS project - access it at `localhost:3000`
+   This will start the NestJS project - access it at `localhost:3000` you should see a hello world text
+5. Import postman collection from ```./helper/rbac_postman_collection.json```
+6. Try the GET request should return 4 records
 
 ### Destroy Database
 
