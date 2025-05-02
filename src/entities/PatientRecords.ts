@@ -3,15 +3,13 @@ import { Organization } from "./Organization";
 import { User } from "./User";
 
 @Index("patientRecords_pkey", ["id"], { unique: true })
-@Index("idx_patientrecords_organizationid", ["organizationId"], {})
-@Index("idx_patientrecords_owner", ["owner"], {})
 @Entity("patientRecords")
 export class PatientRecords {
   @Column("uuid", { primary: true, name: "id" })
   id: string;
 
-  @Column("uuid", { name: "owner" })
-  owner: string;
+  @Column("uuid", { name: "ownerId" })
+  ownerId: string;
 
   @Column("jsonb", { name: "record" })
   record: object;
@@ -24,6 +22,6 @@ export class PatientRecords {
   organization: Organization;
 
   @ManyToOne(() => User, (user) => user.patientRecords)
-  @JoinColumn([{ name: "owner", referencedColumnName: "id" }])
-  owner2: User;
+  @JoinColumn([{ name: "ownerId", referencedColumnName: "id" }])
+  owner: User;
 }

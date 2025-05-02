@@ -1,12 +1,16 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { PatientRecordModule } from "./patient-record/patient-record.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { PermissionGuardService } from "./cross-cutting-aspects/auth/permission.guard";
+import { GlobalModule } from "./cross-cutting-aspects/global/global.module";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
+import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.interceptor";
 
 @Module({
   imports: [
+    GlobalModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
@@ -22,14 +26,24 @@ import { TypeOrmModule } from "@nestjs/typeorm";
           username: configService.get("DATABASE_USER", "turbovets"),
           password: configService.get("DATABASE_PASSWORD", "turbovets"),
           database: configService.get("DATABASE_DB", "turbovets"),
-          entities: [__dirname + "/../**/*.entity{.ts,.js}"],
-          synchronize: configService.get("NODE_ENV") !== "production",
+          entities: [__dirname + "/**/*.{ts,js}"],
+          logging: ["error", "query"],
         };
       },
     }),
+
     PatientRecordModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: FakeLoginInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuardService,
+    },
+  ],
 })
 export class AppModule {}
