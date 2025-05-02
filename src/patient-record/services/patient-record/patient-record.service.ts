@@ -10,8 +10,14 @@ import {
 } from "src/cross-cutting-aspects/auth/authorization-service/permission-structure";
 import { UserData } from "src/services/user/user-data";
 import { Organization } from "src/entities/Organization";
-export class PatientRecordDto {
-  record: object;
+export class UpdatePatientRecordDto {
+  record: Record<string, any>;
+}
+
+export class CreatePatientRecordDto {
+  id: string;
+  ownerId: string;
+  record: Record<string, any>;
   organizationId: string;
 }
 
@@ -50,7 +56,7 @@ export class PatientRecordService {
   }
 
   async createPatientRecord(
-    createPatientRecordDto: PatientRecordDto,
+    createPatientRecordDto: CreatePatientRecordDto,
     user: UserData,
   ) {
     const userOrgLevel = user.info.organization.level;
@@ -64,7 +70,7 @@ export class PatientRecordService {
       throw new Error("Organization not found");
     }
 
-    if (userOrgLevel < organization?.level) {
+    if (userOrgLevel > organization?.level) {
       throw new Error(
         "User does not have permission to create a record in this organization",
       );
@@ -78,7 +84,7 @@ export class PatientRecordService {
 
   async updatePatientRecord(
     id: string,
-    patientRecord: PatientRecordDto,
+    patientRecord: UpdatePatientRecordDto,
     user: UserData,
   ) {
     const whereCondition = this.buildWhereCondition(user, ACTIONS.UPDATE);

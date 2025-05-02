@@ -11,8 +11,9 @@ import {
 } from "@nestjs/common";
 import { CurrentUser } from "src/cross-cutting-aspects/auth/decorators/current-user.decorator";
 import {
-  PatientRecordDto,
+  UpdatePatientRecordDto,
   PatientRecordService,
+  CreatePatientRecordDto,
 } from "./services/patient-record/patient-record.service";
 import {
   AllowPermissions,
@@ -51,7 +52,7 @@ export class PatientRecordController {
   @Post()
   @RequirePermissions("create::any::patient_record")
   createPatientRecord(
-    @Body() createPatientRecordDto: PatientRecordDto,
+    @Body() createPatientRecordDto: CreatePatientRecordDto,
     @CurrentUser() user: UserData,
   ) {
     const newPatientRecord = this.patientRecordService.createPatientRecord(
@@ -69,7 +70,7 @@ export class PatientRecordController {
   )
   async updatePatientRecord(
     @Param("id") id: string,
-    @Body() updatePatientRecordDto: PatientRecordDto,
+    @Body() updatePatientRecordDto: UpdatePatientRecordDto,
     @CurrentUser() user: UserData,
   ) {
     const updatedRecord = await this.patientRecordService.updatePatientRecord(

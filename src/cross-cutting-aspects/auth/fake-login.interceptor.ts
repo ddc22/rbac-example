@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Injectable,
   NestInterceptor,
@@ -19,10 +17,17 @@ export class FakeLoginInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
+
     /**
      * TODO: Wire up this hardcoded user from a jwt and an auth guard
      */
-    const user = await this.userService.getUser(CURRENT_USER_KEY);
+    const userId = request.headers["user-id"];
+    const user = await this.userService.getUser(userId ?? CURRENT_USER_KEY);
+
+    if (!user) {
+      throw new Error("User not found hardcode a valid user");
+    }
+
     request.user = user;
 
     return next.handle();
