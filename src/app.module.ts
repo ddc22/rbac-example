@@ -27,7 +27,7 @@ import { FakeLoginInterceptor } from "./cross-cutting-aspects/auth/fake-login.in
           password: configService.get("DATABASE_PASSWORD", "turbovets"),
           database: configService.get("DATABASE_DB", "turbovets"),
           entities: [__dirname + "/**/*.{ts,js}"],
-          logging: ["error"],
+          logging: ["error", "query"],
         };
       },
     }),

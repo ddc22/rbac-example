@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 
 export type RequestAuditLog = {
-  userId: string;
+  userId?: string;
   method: string;
   resource: string;
   resourceId: string;
@@ -13,8 +13,8 @@ export type RequestAuditLog = {
   extra: {
     ip: string;
     userAgent: string;
-    requiredPermissions: string[];
-    allowedPermissions: string[];
+    requiredPermissions?: string[];
+    allowedPermissions?: string[];
     controllerName: string;
     handlerName: string;
     userPermissions?: string[];
@@ -43,7 +43,7 @@ export class AuditLogService {
     auditLog.userId = payload.userId;
     auditLog.action = methodToAction[payload.method] ?? "UNKNOWN";
     auditLog.resource = payload.resource;
-    auditLog.resource = payload.resourceId;
+    auditLog.resourceId = payload.resourceId;
     auditLog.status = payload.accessGranted ? "SUCCESS" : "FAILURE";
     auditLog.timestamp = new Date();
     auditLog.metadata = {

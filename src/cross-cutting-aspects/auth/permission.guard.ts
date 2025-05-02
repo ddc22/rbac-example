@@ -10,6 +10,7 @@ import {
   AuditLogService,
   RequestAuditLog,
 } from "../global/audit-log/audit-log.service";
+import { UserData } from "src/services/user/user-data";
 
 @Injectable()
 export class PermissionGuardService implements CanActivate {
@@ -33,13 +34,39 @@ export class PermissionGuardService implements CanActivate {
       ]) || [];
 
     if (requiredPermissions.length === 0 && allowedPermissions.length === 0) {
-      return true;
+      const result = true;
+      const requestAuditLog: RequestAuditLog = this.createRequestAuditLog(
+        context,
+        result,
+        {
+          requiredPermissions,
+          allowedPermissions,
+        },
+        undefined,
+      );
+
+      await this.auditLogService.logRequest(requestAuditLog);
+
+      return result;
     }
 
     const user = await this.userService.getUser(CURRENT_USER_KEY);
 
     if (!user || !user.permissions) {
-      return false;
+      const result = true;
+      const requestAuditLog: RequestAuditLog = this.createRequestAuditLog(
+        context,
+        result,
+        {
+          requiredPermissions,
+          allowedPermissions,
+        },
+        user ?? undefined,
+      );
+
+      await this.auditLogService.logRequest(requestAuditLog);
+
+      return result;
     }
 
     const userPermissionNames = user.permissions.map((p) => p.name);
@@ -57,26 +84,48 @@ export class PermissionGuardService implements CanActivate {
       );
 
     const result = hasRequiredPermissions && hasAllowedPermissions;
-    const request = context.switchToHttp().getRequest();
-    const requestAuditLog: RequestAuditLog = {
-      userId: user.info.id,
-      method: request.method,
-      resource: context.getClass().name,
-      accessGranted: result,
-      resourceId: request.params.id,
-      extra: {
-        ip: context.switchToHttp().getRequest().ip,
-        userAgent: context.switchToHttp().getRequest().headers["user-agent"],
+    const requestAuditLog: RequestAuditLog = this.createRequestAuditLog(
+      context,
+      result,
+      {
         requiredPermissions,
         allowedPermissions,
-        controllerName: context.getClass().name,
-        handlerName: context.getHandler().name,
-        userPermissions: userPermissionNames,
+        userPermissionNames,
       },
-    };
+      user,
+    );
 
     await this.auditLogService.logRequest(requestAuditLog);
 
     return result;
+  }
+
+  private createRequestAuditLog(
+    context: ExecutionContext,
+    result: boolean,
+
+    extra: {
+      requiredPermissions?: string[];
+      allowedPermissions?: string[];
+      userPermissionNames?: string[];
+    },
+    user?: UserData,
+  ): RequestAuditLog {
+    const request = context.switchToHttp().getRequest();
+
+    return {
+      userId: user?.info.id,
+      method: request.method,
+      resource: request.path,
+      accessGranted: result,
+      resourceId: request.params.id,
+      extra: {
+        ip: request.ip,
+        userAgent: request.headers["user-agent"],
+        controllerName: context.getClass().name,
+        handlerName: context.getHandler().name,
+        ...extra, // Spread the extra permissions data into the extra object
+      },
+    };
   }
 }

@@ -6,6 +6,7 @@ import {
   level2AdminUserId,
   level2OwnerUserId,
   ownerUserId,
+  unprivilegedUserId,
 } from "helper/seed";
 
 export const CURRENT_USER_KEY = adminUserId;

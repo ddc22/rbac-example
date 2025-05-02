@@ -11,7 +11,7 @@ export class AuditLog {
   id: string;
 
   @Column("uuid", { name: "userId" })
-  userId: string;
+  userId?: string;
 
   @Column("character varying", { name: "action", length: 50 })
   action: string;

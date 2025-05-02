@@ -15,6 +15,7 @@ const level2OwnerUserId = "f743d424-f5f6-40b0-ae09-973597fa8d07";
 const adminUserId = "989159f8-0190-42a8-b7fa-c67bc9510f61";
 const level2AdminUserId = "4984f2c9-5a97-492f-8e71-e9e2f857c218";
 const viewerUserId = "cb662a05-0b86-4551-959a-b4d8cb407406";
+const unprivilegedUserId = "c2671f09-6f15-40f3-b258-4d5cd1157305";
 
 /**
  * Main seed function
@@ -33,6 +34,7 @@ export async function seed() {
   const ownerRoleId = uuidv4();
   const adminRoleId = uuidv4();
   const viewerRoleId = uuidv4();
+  const unprivilegedRole = uuidv4();
 
   // Permissions
   const createRecordId = uuidv4();
@@ -55,7 +57,9 @@ export async function seed() {
         INSERT INTO "role" ("id", "name") VALUES 
         ('${ownerRoleId}', 'Owner'),
         ('${adminRoleId}', 'Admin'),
-        ('${viewerRoleId}', 'Viewer')
+        ('${viewerRoleId}', 'Viewer'),
+        ('${unprivilegedRole}', 'Unprivileged')
+        
       `);
       console.log("Roles created");
 
@@ -107,7 +111,8 @@ export async function seed() {
         ('${level2OwnerUserId}', 'Level 2 Owner User Id', '${ownerRoleId}', '${level1OrgId}'),
         ('${adminUserId}', 'Level 1 Admin User', '${adminRoleId}', '${level1OrgId}'),
         ('${level2AdminUserId}', 'Level 2 Admin User', '${adminRoleId}', '${level2OrgId}'),
-        ('${viewerUserId}', 'Viewer User', '${viewerRoleId}', '${level2OrgId}')
+        ('${viewerUserId}', 'Viewer User', '${viewerRoleId}', '${level2OrgId}'),
+        ('${unprivilegedUserId}', 'Unprivileged User', '${unprivilegedRole}', '${level2OrgId}')
       `);
       console.log("Users created");
 
@@ -144,4 +149,5 @@ export {
   viewerUserId,
   level2OwnerUserId,
   level2AdminUserId,
+  unprivilegedUserId,
 };
