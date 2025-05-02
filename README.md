@@ -3,6 +3,30 @@
 
 NestJS-based RBAC example for a patient records system.
 
+
+
+# Table of Contents
+
+- [RBAC Example with NestJS](#rbac-example-with-nestjs)
+- [Table of Contents](#table-of-contents)
+  - [How To Set Up This Project](#how-to-set-up-this-project)
+  - [Destroy Database](#destroy-database)
+- [Patient Record Management API](#patient-record-management-api)
+  - [Base URL](#base-url)
+  - [Authentication](#authentication)
+  - [Endpoints](#endpoints)
+    - [Get Patient Records](#get-patient-records)
+    - [Get Single Patient Record](#get-single-patient-record)
+    - [Create Patient Record](#create-patient-record)
+    - [Update Patient Record](#update-patient-record)
+    - [Delete Patient Record](#delete-patient-record)
+  - [Data Models](#data-models)
+    - [Patient Record](#patient-record)
+  - [Test User IDs](#test-user-ids)
+    - [Available User IDs](#available-user-ids)
+    - [How to Use These IDs](#how-to-use-these-ids)
+  - [Notes](#notes)
+
 ## How To Set Up This Project
 
 1. Copy and paste `.env.example` as `.env`
@@ -10,7 +34,7 @@ NestJS-based RBAC example for a patient records system.
    ```bash
    npm install
    ```
-3. Set up the database and start the project:
+3. Set up the database
    ```bash
    npm run setup:db
    ```
@@ -25,6 +49,8 @@ NestJS-based RBAC example for a patient records system.
    This will start the NestJS project - access it at `localhost:3000`
 
 ## Destroy Database
+
+In case something goes wrong and you need to start from scratch 
 ```bash
 npm run destroy:db
 ```
