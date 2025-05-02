@@ -6,12 +6,17 @@ import {
 } from "./decorators/permission.decorator";
 import { UserService } from "src/services/user/user.service";
 import { CURRENT_USER_KEY } from "./current-user";
+import {
+  AuditLogService,
+  RequestAuditLog,
+} from "../global/audit-log/audit-log.service";
 
 @Injectable()
 export class PermissionGuardService implements CanActivate {
   constructor(
     private reflector: Reflector,
     private userService: UserService,
+    private auditLogService: AuditLogService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -51,6 +56,26 @@ export class PermissionGuardService implements CanActivate {
         userPermissionNames.includes(permission),
       );
 
-    return hasRequiredPermissions && hasAllowedPermissions;
+    const result = hasRequiredPermissions && hasAllowedPermissions;
+    const request = context.switchToHttp().getRequest();
+    const requestAuditLog: RequestAuditLog = {
+      userId: user.info.id,
+      method: request.method,
+      resource: context.getClass().name,
+      accessGranted: result,
+      extra: {
+        ip: context.switchToHttp().getRequest().ip,
+        userAgent: context.switchToHttp().getRequest().headers["user-agent"],
+        requiredPermissions,
+        allowedPermissions,
+        controllerName: context.getClass().name,
+        handlerName: context.getHandler().name,
+        userPermissions: userPermissionNames,
+      },
+    };
+
+    await this.auditLogService.logRequest(requestAuditLog);
+
+    return result;
   }
 }

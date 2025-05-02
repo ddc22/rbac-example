@@ -47,13 +47,27 @@ export class InitialMigration1746069225075 implements MigrationInterface {
             CONSTRAINT "rolepermission_permissionid_foreign" FOREIGN KEY("permissionId") REFERENCES "permission"("id")
         );
 
-        -- Create indexes for foreign keys to improve query performance
-        CREATE INDEX "idx_user_roleid" ON "user"("roleId");
-        CREATE INDEX "idx_user_organizationid" ON "user"("organizationId");
-        CREATE INDEX "idx_patientrecords_owner" ON "patientRecords"("ownerId");
-        CREATE INDEX "idx_patientrecords_organizationid" ON "patientRecords"("organizationId");
-        CREATE INDEX "idx_rolepermission_roleid" ON "rolePermission"("roleId");
-        CREATE INDEX "idx_rolepermission_permissionid" ON "rolePermission"("permissionId");
+        -- Create audit log table
+        CREATE TABLE "auditLog" (
+            "id" UUID PRIMARY KEY,
+            "userId" UUID NOT NULL,
+            "action" VARCHAR(50) NOT NULL,
+            "resource" VARCHAR(255) NOT NULL,
+            "resourceId" UUID,
+            "status" VARCHAR(50) NOT NULL,
+            "timestamp" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "metadata" JSONB,
+            CONSTRAINT "auditlog_userid_foreign" FOREIGN KEY("userId") REFERENCES "user"("id")
+        );
+        
+        -- Create index for querying logs by user
+        CREATE INDEX "idx_auditlog_userid" ON "auditLog"("userId");
+        
+        -- Create index for timestamp to support log retrieval by time periods
+        CREATE INDEX "idx_auditlog_timestamp" ON "auditLog"("timestamp");
+        
+        -- Create composite index for resource + resourceId for efficient resource-specific queries
+        CREATE INDEX "idx_auditlog_resource_resourceid" ON "auditLog"("resource", "resourceId");
     `);
   }
 

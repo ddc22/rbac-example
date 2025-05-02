@@ -6,13 +6,12 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
+import { AuditLog } from "./AuditLog";
 import { PatientRecords } from "./PatientRecords";
 import { Organization } from "./Organization";
 import { Role } from "./Role";
 
 @Index("user_pkey", ["id"], { unique: true })
-@Index("idx_user_organizationid", ["organizationId"], {})
-@Index("idx_user_roleid", ["roleId"], {})
 @Entity("user")
 export class User {
   @Column("uuid", { primary: true, name: "id" })

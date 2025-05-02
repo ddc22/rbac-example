@@ -28,7 +28,8 @@
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./migrations/datasource.ts",
     "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create ./migrations/$npm_config_name",
     "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d ./migrations/datasource.ts ./migrations/$npm_config_name",
-    "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./migrations/datasource.ts"
+    "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./migrations/datasource.ts",
+    "generate:entities":"npx typeorm-model-generator -h localhost -d turbovets -p 5432 -u turbovets -x turbovets -e postgres -o ./src/entities --noConfig --skipSchema --strictMode"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

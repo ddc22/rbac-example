@@ -3,8 +3,6 @@ import { Organization } from "./Organization";
 import { User } from "./User";
 
 @Index("patientRecords_pkey", ["id"], { unique: true })
-@Index("idx_patientrecords_organizationid", ["organizationId"], {})
-@Index("idx_patientrecords_owner", ["ownerId"], {})
 @Entity("patientRecords")
 export class PatientRecords {
   @Column("uuid", { primary: true, name: "id" })
