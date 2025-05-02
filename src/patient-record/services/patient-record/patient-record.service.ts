@@ -11,7 +11,6 @@ import {
 import { UserData } from "src/services/user/user-data";
 import { Organization } from "src/entities/Organization";
 export class PatientRecordDto {
-  recordId: string;
   record: object;
   organizationId: string;
 }
@@ -77,19 +76,52 @@ export class PatientRecordService {
     return patientRecord;
   }
 
-  updatePatientRecord(
+  async updatePatientRecord(
     id: string,
     patientRecord: PatientRecordDto,
     user: UserData,
   ) {
-    const patientRecordResult = this.patientRecordRepository.update(
-      user.info.id,
-      patientRecord,
-    );
+    const whereCondition = this.buildWhereCondition(user, ACTIONS.UPDATE);
+    const recordToUpdate = await this.patientRecordRepository.findOne({
+      where: {
+        id,
+        ...whereCondition,
+      },
+      relations: ["organization"],
+    });
+
+    if (!recordToUpdate) {
+      throw new Error(
+        "Patient record not found or you don't have permission to update it",
+      );
+    }
+
+    const patientRecordResult = await this.patientRecordRepository.update(id, {
+      record: patientRecord.record,
+    });
+
+    if (!patientRecordResult) {
+      throw new Error("Patient record not found");
+    }
     return patientRecordResult;
   }
 
   async deletePatientRecord(id: string, user: UserData) {
+    const whereCondition = this.buildWhereCondition(user, ACTIONS.DELETE);
+    const recordToDelete = await this.patientRecordRepository.findOne({
+      where: {
+        id,
+        ...whereCondition,
+      },
+      relations: ["organization"],
+    });
+
+    if (!recordToDelete) {
+      throw new Error(
+        "Patient record not found or you don't have permission to update it",
+      );
+    }
+
     const patientRecord = this.patientRecordRepository.delete(id);
     return patientRecord;
   }
@@ -108,6 +140,10 @@ export class PatientRecordService {
       },
     };
 
+    /**
+     * If the user does not have the permission at any scope
+     * then they can only perform action on their own records
+     */
     if (
       !recordReadPermissions.find((p) => p.includes(SCOPE.ANY)) &&
       recordReadPermissions.find((p) => p.includes(SCOPE.OWN))
