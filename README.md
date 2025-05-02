@@ -188,21 +188,10 @@ Deletes a patient record.
 
 ## Data Models
 
-### Patient Record
+### Diagram
 
-```json
-{
-  "id": "string",         // UUID
-  "ownerId": "string",    // UUID of record owner
-  "record": {
-    "age": 0,
-    "diagnosis": "string",
-    "treatment": "string",
-    "patientName": "string"
-  },
-  "organizationId": "string"  // UUID of organization
-}
-```
+<img width="570" alt="image" src="https://github.com/user-attachments/assets/f6312d3c-22ee-4cb7-8d8a-9b9cb71840e7" />
+
 
 ## Test User IDs
 
