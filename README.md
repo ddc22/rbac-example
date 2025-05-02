@@ -3,11 +3,14 @@
 
 NestJS-based RBAC example for a patient records system.
 
-
+# Requirements
+ - Docker
+ - NodeJS
 
 # Table of Contents
 
 - [RBAC Example with NestJS](#rbac-example-with-nestjs)
+- [Requirements](#requirements)
 - [Table of Contents](#table-of-contents)
 - [Setup instructions](#setup-instructions)
     - [Starting Up](#starting-up)
