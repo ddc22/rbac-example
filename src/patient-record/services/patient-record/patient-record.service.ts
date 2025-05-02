@@ -2,13 +2,14 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PatientRecords } from "src/entities/PatientRecords";
-import { MoreThan, MoreThanOrEqual, Repository } from "typeorm";
+import { MoreThan, MoreThanOrEqual, Or, Repository } from "typeorm";
 import {
   ACTIONS,
   RESOURCES,
   SCOPE,
 } from "src/cross-cutting-aspects/auth/authorization-service/permission-structure";
 import { UserData } from "src/services/user/user-data";
+import { Organization } from "src/entities/Organization";
 export class PatientRecordDto {
   recordId: string;
   record: object;
@@ -20,47 +21,56 @@ export class PatientRecordService {
   constructor(
     @InjectRepository(PatientRecords)
     private patientRecordRepository: Repository<PatientRecords>,
+    @InjectRepository(Organization)
+    private organizationRepository: Repository<Organization>,
   ) {}
 
   async getPatientRecords(user: UserData) {
-    const patientRecords = await this.patientRecordRepository.find();
-    return patientRecords;
-  }
-
-  async getPatientRecordById(id: string, user: UserData) {
     const recordReadPermissions = user.filterPermissions(
       RESOURCES.PATIENT_RECORD,
       ACTIONS.READ,
     );
-    const whereCondition: Record<string, any> = {};
-    whereCondition.organization = {
-      level: MoreThanOrEqual(user.info.organization.level),
-    };
-    if (
-      !recordReadPermissions.find((p) => p.includes(SCOPE.ANY)) &&
-      recordReadPermissions.find((p) => p.includes(SCOPE.OWN))
-    ) {
-      whereCondition.ownerId = user.info.id;
-    }
+    const whereCondition = this.buildWhereCondition(user, ACTIONS.READ);
 
-    console.log({
-      whereCondition,
-      recordReadPermissions,
-      all: user.permissions,
+    const patientRecords = await this.patientRecordRepository.find({
+      where: whereCondition,
     });
+    return patientRecords;
+  }
 
+  async getPatientRecordById(id: string, user: UserData) {
+    const whereCondition = this.buildWhereCondition(user, ACTIONS.READ);
+
+    whereCondition.id = id;
     const patientRecords = await this.patientRecordRepository.findOne({
-      where: { id: id, organizationId: user.info.organizationId },
+      where: whereCondition,
       relations: ["organization"],
     });
 
     return patientRecords;
   }
 
-  createPatientRecord(
+  async createPatientRecord(
     createPatientRecordDto: PatientRecordDto,
     user: UserData,
   ) {
+    const userOrgLevel = user.info.organization.level;
+    const organization = await this.organizationRepository.findOne({
+      where: {
+        id: createPatientRecordDto.organizationId,
+      },
+    });
+
+    if (!organization) {
+      throw new Error("Organization not found");
+    }
+
+    if (userOrgLevel < organization?.level) {
+      throw new Error(
+        "User does not have permission to create a record in this organization",
+      );
+    }
+
     const patientRecord = this.patientRecordRepository.create(
       createPatientRecordDto,
     );
@@ -82,5 +92,29 @@ export class PatientRecordService {
   async deletePatientRecord(id: string, user: UserData) {
     const patientRecord = this.patientRecordRepository.delete(id);
     return patientRecord;
+  }
+
+  private buildWhereCondition(
+    user: UserData,
+    action: string,
+  ): Record<string, any> {
+    const recordReadPermissions = user.filterPermissions(
+      RESOURCES.PATIENT_RECORD,
+      action,
+    );
+    const whereCondition: Record<string, any> = {
+      organization: {
+        level: MoreThanOrEqual(user.info.organization.level),
+      },
+    };
+
+    if (
+      !recordReadPermissions.find((p) => p.includes(SCOPE.ANY)) &&
+      recordReadPermissions.find((p) => p.includes(SCOPE.OWN))
+    ) {
+      whereCondition.ownerId = user.info.id;
+    }
+
+    return whereCondition;
   }
 }

@@ -24,7 +24,7 @@ import { UserData } from "src/services/user/user-data";
 export class PatientRecordController {
   constructor(private patientRecordService: PatientRecordService) {}
   @Get()
-  @AllowPermissions("read::own::patient_record", "read::any::record")
+  @AllowPermissions("read::own::patient_record", "read::any::patient_record")
   async getPatientRecords(@CurrentUser() user: UserData) {
     const patientRecords =
       await this.patientRecordService.getPatientRecords(user);
@@ -49,7 +49,7 @@ export class PatientRecordController {
   }
 
   @Post()
-  @RequirePermissions("create_patient_record")
+  @RequirePermissions("create::any::patient_record")
   createPatientRecord(
     @Body() createPatientRecordDto: PatientRecordDto,
     @CurrentUser() user: UserData,
