@@ -31,6 +31,7 @@ export class PatientRecordController {
       await this.patientRecordService.getPatientRecords(user);
     return patientRecords;
   }
+
   @Get(":id")
   @AllowPermissions("read::own::patient_record", "read::any::patient_record")
   async getPatientRecord(

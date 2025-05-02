@@ -10,3 +10,11 @@ import {
 } from "helper/seed";
 
 export const CURRENT_USER_KEY = adminUserId;
+
+export function resolveCurrentUser(request: Request): string {
+  const userId = request.headers["user-id"] as string;
+  if (!userId) {
+    return CURRENT_USER_KEY;
+  }
+  return userId;
+}

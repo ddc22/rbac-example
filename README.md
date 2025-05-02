@@ -1,19 +1,34 @@
-# rbac-example
-NestJS based Rbac Example for A patient records system
 
-## How To SetUP this project
-### Copy and paste .env.example as .env
-### Set up the db and start the project
-- npm run setup:db
-   - This will
-      - 1: start a postgres docker container with env vars
-      - 2: run the schema migration and initialize the db schema
-      - 3: seed the db with some sample data
-npm start
-    - Just start the nest project and go to localhost:3000
+# RBAC Example with NestJS
 
-## Destroy DB 
+NestJS-based RBAC example for a patient records system.
+
+## How To Set Up This Project
+
+1. Copy and paste `.env.example` as `.env`
+2. Run: 
+   ```bash
+   npm install
+   ```
+3. Set up the database and start the project:
+   ```bash
+   npm run setup:db
+   ```
+   This will:
+   - Start a PostgreSQL Docker container with environment variables
+   - Run the schema migration and initialize the database schema
+   - Seed the database with sample data
+4. Start up NestJS:
+   ```bash
+   npm start
+   ```
+   This will start the NestJS project - access it at `localhost:3000`
+
+## Destroy Database
+```bash
 npm run destroy:db
+```
+
 # Patient Record Management API
 
 ## Base URL

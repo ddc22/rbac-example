@@ -5,7 +5,7 @@ import {
   REQUIRED_PERMISSIONS_KEY,
 } from "./decorators/permission.decorator";
 import { UserService } from "src/services/user/user.service";
-import { CURRENT_USER_KEY } from "./current-user";
+import { resolveCurrentUser } from "./current-user";
 import {
   AuditLogService,
   RequestAuditLog,
@@ -46,14 +46,24 @@ export class PermissionGuardService implements CanActivate {
       );
 
       await this.auditLogService.logRequest(requestAuditLog);
-
+      console.log({
+        result,
+        requiredPermissions,
+        allowedPermissions,
+      });
       return result;
     }
 
-    const user = await this.userService.getUser(CURRENT_USER_KEY);
+    const user = await this.userService.getUser(
+      resolveCurrentUser(context.switchToHttp().getRequest()),
+    );
 
-    if (!user || !user.permissions) {
-      const result = true;
+    if (
+      !user ||
+      !user.permissions ||
+      (allowedPermissions.length > 0 && !user.permissions.length)
+    ) {
+      const result = false;
       const requestAuditLog: RequestAuditLog = this.createRequestAuditLog(
         context,
         result,
@@ -65,7 +75,6 @@ export class PermissionGuardService implements CanActivate {
       );
 
       await this.auditLogService.logRequest(requestAuditLog);
-
       return result;
     }
 
@@ -95,6 +104,13 @@ export class PermissionGuardService implements CanActivate {
       user,
     );
 
+    console.log({
+      result,
+      requiredPermissions,
+      allowedPermissions,
+      userPermissionNames,
+      user,
+    });
     await this.auditLogService.logRequest(requestAuditLog);
 
     return result;

@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { UserService } from "src/services/user/user.service";
-import { CURRENT_USER_KEY } from "./current-user";
+import { resolveCurrentUser } from "./current-user";
 
 @Injectable()
 export class FakeLoginInterceptor implements NestInterceptor {
@@ -16,13 +16,14 @@ export class FakeLoginInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<any>();
 
     /**
      * TODO: Wire up this hardcoded user from a jwt and an auth guard
      */
-    const userId = request.headers["user-id"];
-    const user = await this.userService.getUser(userId ?? CURRENT_USER_KEY);
+    const user = await this.userService.getUser(
+      resolveCurrentUser(request as Request),
+    );
 
     if (!user) {
       throw new Error("User not found hardcode a valid user");

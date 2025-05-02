@@ -11,7 +11,6 @@ export class UserData {
   }
 
   filterPermissions(resource: string, action: string): string[] {
-    console.log({ p: this.permissions });
     return this.permissions
       .filter(
         (permission) =>
