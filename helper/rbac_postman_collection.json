@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "a0c20426-39c0-4d43-baaf-f94ff1bd66c3",
+		"name": "TV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "325628"
+	},
+	"item": [
+		{
+			"name": "Get Patient Record",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "989159f8-0190-42a8-b7fa-c67bc9510f61",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:3000/patient-record/692a03b5-50d5-4c24-b4af-4ef7f7181d76"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Records",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "989159f8-0190-42a8-b7fa-c67bc9510f61",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"id\": \"ff67e190-ed45-4702-ab27-7fb005074ef4\",\n        \"ownerId\": \"ba7c6438-dfca-48ee-9776-93777a59a0e0\",\n        \"record\": {\n            \"age\": 45,\n            \"diagnosis\": \"Hypertensions\",\n            \"treatment\": \"Medication and lifestyle changes\",\n            \"patientName\": \"John Doe\"\n        },\n        \"organizationId\": \"6c7f171f-332a-4914-b05e-e536fb3549a4\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/patient-record/"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Patient Record",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "989159f8-0190-42a8-b7fa-c67bc9510f61",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"record\": {\n        \"age\": 45,\n        \"diagnosis\": \"Hypertensions\",\n        \"treatment\": \"Medication and lifestyle changes\",\n        \"patientName\": \"John Doe\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/patient-record/ff67e190-ed45-4702-ab27-7fb005074ef4"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Patient Record",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "989159f8-0190-42a8-b7fa-c67bc9510f61",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"692a03b5-50d5-4c24-b4af-4ef7f7181d77\",\n    \"ownerId\": \"f743d424-f5f6-40b0-ae09-973597fa8d07\",\n    \"record\": {\n        \"age\": 28,\n        \"diagnosis\": \"C Influenza\",\n        \"treatment\": \"C Rest and fluids\",\n        \"patientName\": \"C Robert Johnson\"\n    },\n    \"organizationId\": \"2907c94e-0147-46e9-ae37-e05704dffdd0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/patient-record"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Patient Record",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "989159f8-0190-42a8-b7fa-c67bc9510f61",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"recordId\": \"ff67e190-ed45-4702-ab27-7fb005074ef4\",\n    \"record\": {\n        \"age\": 45,\n        \"diagnosis\": \"Hypertensions\",\n        \"treatment\": \"Medication and lifestyle changes\",\n        \"patientName\": \"John Doe\"\n    },\n    \"organizationId\": \"6c7f171f-332a-4914-b05e-e536fb3549a4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/patient-record/ff67e190-ed45-4702-ab27-7fb005074ef4"
+			},
+			"response": []
+		}
+	]
+}
